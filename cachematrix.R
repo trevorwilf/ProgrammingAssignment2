@@ -4,6 +4,7 @@
 ## the folowing two functions are a pair of functions
 ## that cache and solve the inverse of matrix's
 ##
+##
 ## makeCacheMatrix function creates a list of 4 
 ## seperate functions. They are:
 ## 1) set - sets the value of the matrix, will change
@@ -12,36 +13,50 @@
 ## 2) get - gets the matrix from cache
 ## 3) setinv - sets the value of the inverse matrix
 ## 4) getinv - gets the inverse matrix from cache
-## this function will not calculate the inverse.  It
-## only stores it.
 makeCacheMatrix <- function(x = matrix()) {
+  # initialize the inverse matrix value as NULL
   invmat <- NULL
+  
+  # set the value of the matrix
   set <- function(y) {
     x <<- y
     invmat <<- NULL
   }
+  
+  # get the value of the matrix
   get <- function() x
-  setinv <- function(solve) invmat <<- solve 
+  
+  # set the value of the inverse matrix
+  setinv <- function(solve) invmat <<- solve
+  
+  #get the value of the inverse matrix
   getinv <- function() invmat
   
+  # list of the funtions 
   list(set = set, get = get, setinv = setinv, getinv = getinv)
 }
 
-## This function first checks to see if the inverse
+## cacheSolve function first checks to see if the inverse
 ## matrix has been solved before.  If it has, it will
 ## retrieve it from cache and return it.  If the 
 ## inverse has not been calculated, it will calculate
 ## it, set it to cache for future reference, and finally
 ## return the inverse matrix.
 cacheSolve <- function(x, ...) {
-        ## Return a matrix that is the inverse of 'x'
+  # first we check if the inverse has already been solved
+  # if it has we return it from cache
   invmat <- x$getinv()
   if(!is.null(invmat)){
     message("retrieved inverse Matrix from cache ...")
     return(invmat)
   }
+  
+  # if the matrix has not been solved then we go ahead 
+  # and solve it, store it, and return it
   message("Solving inverse Matrix ...")
+  # this will solve it and then store it
   x$setinv(solve(x$get()))
+  # finally we return it
   return(x$getinv())
 }
 
@@ -56,10 +71,23 @@ cacheSolve <- function(x, ...) {
 ## [1,]   -1    1
 ## [2,]   -2    1
 ##
-## the inverse of this matrix is:
+## a <- makeCacheMatrix(m)
+## cacheSolve(a)
+##
+## this should return a matrix like the one below:
+## Solving inverse Matrix ...
 ## [,1] [,2]
 ## [1,]    1   -1
 ## [2,]    2   -1
+##
+## as second re-run of cacheSolve(a) should demonstrate
+## that it is pulling from cache:
+## cacheSolve(a)
+## retrieved inverse Matrix from cache ...
+## [,1] [,2]
+## [1,]    1   -1
+## [2,]    2   -1
+##
 ##
 ## for larger matrix's use:
 ## using 6x6
